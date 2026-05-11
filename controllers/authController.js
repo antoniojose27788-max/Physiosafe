@@ -99,7 +99,6 @@ exports.login = async (req, res) => {
             },
             process.env.JWT_SECRET || 'MiClaveSuperSecretaTFG2026',
             { expiresIn: '24h' }
-            { expiresIn: '24h' }
         );
 
         res.status(200).json({ 
