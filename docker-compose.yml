@@ -1,0 +1,31 @@
+# docker-compose.yml
+# Configuración de Docker Compose para PhysioSafe
+
+version: '3.8' # Versión de Docker Compose
+
+services:
+  # Servicio de base de datos PostgreSQL
+  postgres:
+    image: postgres:15 # Imagen oficial de PostgreSQL versión 15
+    container_name: physiosafe_postgres # Nombre del contenedor
+    environment:
+      POSTGRES_DB: physiosafe_db # Nombre de la base de datos
+      POSTGRES_USER: user # Usuario de la base de datos
+      POSTGRES_PASSWORD: password # Contraseña del usuario
+    ports:
+      - "5432:5432" # Mapeo de puertos: host:contenedor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volumen persistente para los datos
+    restart: unless-stopped # Reiniciar automáticamente a menos que se detenga manualmente
+    networks:
+      - physiosafe_network # Red personalizada para la aplicación
+
+# Volúmenes nombrados para persistencia de datos
+volumes:
+  postgres_data:
+    driver: local # Driver local para el volumen
+
+# Redes personalizadas
+networks:
+  physiosafe_network:
+    driver: bridge # Driver de red bridge
