@@ -18,9 +18,11 @@ services:
     image: node:18-alpine
     container_name: physiosafe_web
     working_dir: /app
-    command: sh -c "npm install && npm start"
+    # 1. Cambiamos npm start por node server.js por si no tienes el script configurado
+    command: sh -c "npm install && node server.js"
     volumes:
-      - ./app:/app
+      # 2. EL CAMBIO CRÍTICO: El punto y barra (./) coge la raíz de tu proyecto
+      - ./:/app
     ports:
       - "3000:3000"
     depends_on:
