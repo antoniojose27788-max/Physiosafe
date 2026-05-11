@@ -40,9 +40,10 @@ function switchForm(showForm) {
 }
 
 // Función para hacer peticiones HTTP a la API
-async function apiRequest(endpoint, options = {}) {
+async function apiRequest(endpoint, method = 'GET', data = null, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const config = {
+        method: method,
         headers: {
             'Content-Type': 'application/json',
             ...options.headers
@@ -55,15 +56,20 @@ async function apiRequest(endpoint, options = {}) {
         config.headers.Authorization = `Bearer ${authToken}`;
     }
 
+    // Agregar cuerpo si hay datos
+    if (data && method !== 'GET') {
+        config.body = JSON.stringify(data);
+    }
+
     try {
         const response = await fetch(url, config);
-        const data = await response.json();
+        const responseData = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || 'Error en la petición');
+            throw new Error(responseData.message || responseData.error || 'Error en la petición');
         }
 
-        return data;
+        return responseData;
     } catch (error) {
         console.error('Error en API:', error);
         throw error;
@@ -86,10 +92,7 @@ async function handleLogin(event) {
     submitBtn.textContent = 'Iniciando sesión...';
 
     try {
-        const data = await apiRequest('/auth/login', {
-            method: 'POST',
-            body: JSON.stringify(loginData)
-        });
+        const data = await apiRequest('/auth/login', 'POST', loginData);
 
         // Guardar token y usuario
         authToken = data.token;
@@ -131,10 +134,7 @@ async function handleRegister(event) {
     submitBtn.textContent = 'Registrando...';
 
     try {
-        const data = await apiRequest('/auth/register', {
-            method: 'POST',
-            body: JSON.stringify(registerData)
-        });
+        const data = await apiRequest('/auth/register', 'POST', registerData);
 
         showMessage('Registro exitoso. Ahora puedes iniciar sesión.', 'success');
 

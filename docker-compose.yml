@@ -1,31 +1,60 @@
-# docker-compose.yml
-# Configuración de Docker Compose para PhysioSafe
-
-version: '3.8' # Versión de Docker Compose
-
+version: '3.8'
 services:
-  # Servicio de base de datos PostgreSQL
-  postgres:
-    image: postgres:15 # Imagen oficial de PostgreSQL versión 15
-    container_name: physiosafe_postgres # Nombre del contenedor
+  db:
+    image: postgres:15
+    container_name: physiosafe_db
     environment:
-      POSTGRES_DB: physiosafe_db # Nombre de la base de datos
-      POSTGRES_USER: user # Usuario de la base de datos
-      POSTGRES_PASSWORD: password # Contraseña del usuario
-    ports:
-      - "5432:5432" # Mapeo de puertos: host:contenedor
+      POSTGRES_USER: physiouser
+      POSTGRES_PASSWORD: SecretPassword123!
+      POSTGRES_DB: physiodb
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Volumen persistente para los datos
-    restart: unless-stopped # Reiniciar automáticamente a menos que se detenga manualmente
+      - ./data/postgres:/var/lib/postgresql/data
     networks:
-      - physiosafe_network # Red personalizada para la aplicación
+      - physio-network
 
-# Volúmenes nombrados para persistencia de datos
-volumes:
-  postgres_data:
-    driver: local # Driver local para el volumen
+  web-app:
+    image: node:18-alpine
+    container_name: physiosafe_web
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    volumes:
+      - ./app:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - physio-network
 
-# Redes personalizadas
+  typebot-builder:
+    image: baptistearno/typebot-builder:latest
+    container_name: physiosafe_bot_builder
+    environment:
+      - DATABASE_URL=postgresql://physiouser:SecretPassword123!@db:5432/physiodb
+      - ENCRYPTION_SECRET=ClaveSuperSecretaPhysioSafe2026!
+      - NEXTAUTH_URL=http://localhost:8081
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:8082
+    ports:
+      - "8081:3000"
+    depends_on:
+      - db
+    networks:
+      - physio-network
+
+  typebot-viewer:
+    image: baptistearno/typebot-viewer:latest
+    container_name: physiosafe_bot_viewer
+    environment:
+      - DATABASE_URL=postgresql://physiouser:SecretPassword123!@db:5432/physiodb
+      - ENCRYPTION_SECRET=ClaveSuperSecretaPhysioSafe2026!
+      - CORS_ORIGIN=*
+    ports:
+      - "8082:3000"
+    depends_on:
+      - db
+    networks:
+      - physio-network
+
 networks:
-  physiosafe_network:
-    driver: bridge # Driver de red bridge
+  physio-network:
+    driver: bridge
