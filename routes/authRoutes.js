@@ -1,20 +1,40 @@
-// routes/authRoutes.js
-// Rutas para autenticación (login, registro, etc.)
-
 const express = require('express');
-const { register, login, verifyToken, verify } = require('../controllers/authController'); // Importamos el controlador
 const router = express.Router();
+const authController = require('../controllers/authController');
+const authGuard = require('../middlewares/authMiddleware');
 
-// Ruta para registro de usuarios
-// POST /api/auth/register
-router.post('/register', register);
+// RUTAS PÚBLICAS
 
-// Ruta para login
-// POST /api/auth/login
-router.post('/login', login);
+/**
+ * POST /api/auth/register
+ * Registrar un nuevo usuario
+ */
+router.post('/register', authController.register);
 
-// Ruta para verificar token JWT (protegida)
-// GET /api/auth/verify
-router.get('/verify', verifyToken, verify);
+/**
+ * POST /api/auth/login
+ * Iniciar sesión (obtener JWT token)
+ */
+router.post('/login', authController.login);
+
+// RUTAS PROTEGIDAS (Requieren autenticación)
+
+/**
+ * GET /api/auth/me
+ * Obtener datos del usuario autenticado
+ */
+router.get('/me', authGuard, authController.getMe);
+
+/**
+ * POST /api/auth/logout
+ * Cerrar sesión
+ */
+router.post('/logout', authGuard, authController.logout);
+
+/**
+ * PUT /api/auth/update
+ * Actualizar datos del usuario
+ */
+router.put('/update', authGuard, authController.updateUser);
 
 module.exports = router;

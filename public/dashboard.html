@@ -4,136 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhysioSafe - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="dashboard-container">
+    <div class="d-flex">
         <!-- Notificaciones -->
-        <div id="notificationContainer" class="notification-container"></div>
+        <div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
-        <!-- Sidebar de navegación -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h2>PhysioSafe</h2>
-                <div class="user-info">
-                    <span id="userName">Cargando...</span>
-                    <span id="userRole" class="role-badge">Cargando...</span>
+        <!-- SIDEBAR -->
+        <nav class="sidebar bg-dark text-white">
+            <div class="sidebar-header p-4 border-bottom">
+                <h2 class="mb-0"><i class="fas fa-clinic-medical"></i> PhysioSafe</h2>
+                <div class="user-info mt-3">
+                    <p class="mb-1"><strong id="userName">Cargando...</strong></p>
+                    <span id="userRole" class="badge bg-primary">Cargando...</span>
                 </div>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#" class="nav-link active" data-section="dashboard">Dashboard</a></li>
-                <li><a href="#" class="nav-link" data-section="appointments">Citas</a></li>
-                <li><a href="#" class="nav-link" data-section="calendar">Calendario</a></li>
-                <li><a href="#" class="nav-link" data-section="reports">Reportes</a></li>
-                <li><a href="#" class="nav-link" data-section="consents">Consentimientos</a></li>
-                <li id="adminUsers" style="display: none;"><a href="#" class="nav-link" data-section="users">Usuarios</a></li>
+            <ul class="nav-menu list-unstyled p-0 mt-3 flex-grow-1">
+                <li><a href="#" class="nav-link active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-section="appointments"><i class="fas fa-calendar"></i> Citas</a></li>
+                <li><a href="#" class="nav-link" data-section="calendar"><i class="fas fa-calendar-alt"></i> Calendario</a></li>
+                <li><a href="#" class="nav-link" data-section="reports"><i class="fas fa-file-alt"></i> Reportes</a></li>
+                <li><a href="#" class="nav-link" data-section="consents"><i class="fas fa-file-contract"></i> Consentimientos</a></li>
+                <li id="adminUsers" style="display: none;"><a href="#" class="nav-link" data-section="users"><i class="fas fa-users"></i> Usuarios</a></li>
             </ul>
-            <div class="sidebar-footer">
-                <button id="logoutBtn" class="btn btn-danger">Cerrar Sesión</button>
+            <div class="sidebar-footer p-3 border-top">
+                <button id="logoutBtn" class="btn btn-danger w-100"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
             </div>
         </nav>
 
-        <!-- Contenido principal -->
-        <main class="main-content">
-            <!-- Sección Dashboard -->
-            <section id="dashboard-section" class="content-section active">
-                <h1>Bienvenido al Dashboard</h1>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3 id="totalAppointments">0</h3>
-                        <p>Citas Totales</p>
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="flex-grow-1 bg-light">
+            <!-- DASHBOARD -->
+            <section id="dashboard-section" class="content-section active p-4">
+                <h1 class="mb-4"><i class="fas fa-home"></i> Bienvenido al Dashboard</h1>
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title text-muted">Citas Totales</h6>
+                                        <h3 class="card-text" id="totalAppointments">0</h3>
+                                    </div>
+                                    <i class="fas fa-calendar text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3 id="pendingAppointments">0</h3>
-                        <p>Citas Pendientes</p>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title text-muted">Citas Pendientes</h6>
+                                        <h3 class="card-text" id="pendingAppointments">0</h3>
+                                    </div>
+                                    <i class="fas fa-clock text-warning" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3 id="totalReports">0</h3>
-                        <p>Reportes</p>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title text-muted">Reportes</h6>
+                                        <h3 class="card-text" id="totalReports">0</h3>
+                                    </div>
+                                    <i class="fas fa-file-alt text-success" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3 id="totalConsents">0</h3>
-                        <p>Consentimientos</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Sección Citas -->
-            <section id="appointments-section" class="content-section">
-                <h1>Gestión de Citas</h1>
-                <div class="section-actions">
-                    <button id="newAppointmentBtn" class="btn btn-primary">Nueva Cita</button>
-                </div>
-                <div id="appointmentsList" class="data-list">
-                    <!-- Las citas se cargarán aquí dinámicamente -->
-                </div>
-            </section>
-
-            <!-- Sección Calendario -->
-            <section id="calendar-section" class="content-section">
-                <h1>Calendario de Citas</h1>
-                <div class="calendar-controls">
-                    <button id="prevMonth" class="btn btn-secondary">&larr; Anterior</button>
-                    <h2 id="calendarMonth"></h2>
-                    <button id="nextMonth" class="btn btn-secondary">Siguiente &rarr;</button>
-                </div>
-                <div id="calendar" class="calendar-grid">
-                    <!-- El calendario se cargará dinámicamente -->
-                </div>
-                <div id="calendarAppointments" class="calendar-appointments">
-                    <!-- Las citas del día seleccionado se mostrarán aquí -->
-                </div>
-            </section>
-
-            <!-- Sección Reportes -->
-            <section id="reports-section" class="content-section">
-                <h1>Reportes</h1>
-                <div class="section-actions">
-                    <button id="newReportBtn" class="btn btn-primary">Nuevo Reporte</button>
-                </div>
-                <div id="reportsList" class="data-list">
-                    <!-- Los reportes se cargarán aquí dinámicamente -->
-                </div>
-            </section>
-
-            <!-- Sección Consentimientos -->
-            <section id="consents-section" class="content-section">
-                <h1>Consentimientos</h1>
-                <div class="section-actions">
-                    <button id="newConsentBtn" class="btn btn-primary">Firmar Consentimiento</button>
-                </div>
-                <div id="consentsList" class="data-list">
-                    <!-- Los consentimientos se cargarán aquí dinámicamente -->
-                </div>
-            </section>
-
-            <!-- Sección Usuarios (solo admin) -->
-            <section id="users-section" class="content-section">
-                <h1>Gestión de Usuarios</h1>
-                <div class="section-actions">
-                    <button id="newUserBtn" class="btn btn-primary">Nuevo Usuario</button>
-                </div>
-                <div id="usersList" class="data-list">
-                    <!-- Los usuarios se cargarán aquí dinámicamente -->
-                </div>
-            </section>
-
-            <!-- Modal para formularios -->
-            <div id="modal" class="modal hidden">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <div id="modalBody">
-                        <!-- El contenido del modal se cargará dinámicamente -->
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title text-muted">Consentimientos</h6>
+                                        <h3 class="card-text" id="totalConsents">0</h3>
+                                    </div>
+                                    <i class="fas fa-file-contract text-info" style="font-size: 2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Mensajes -->
-            <div id="dashboardMessage" class="message hidden"></div>
+            <!-- CITAS -->
+            <section id="appointments-section" class="content-section p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1><i class="fas fa-calendar"></i> Gestión de Citas</h1>
+                    <button id="newAppointmentBtn" class="btn btn-primary"><i class="fas fa-plus"></i> Nueva Cita</button>
+                </div>
+                <div id="appointmentsList">
+                    <!-- Se cargarán dinámicamente -->
+                </div>
+            </section>
+
+            <!-- CALENDARIO -->
+            <section id="calendar-section" class="content-section p-4">
+                <h1 class="mb-4"><i class="fas fa-calendar-alt"></i> Calendario</h1>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="calendar-controls mb-4">
+                            <button id="prevMonth" class="btn btn-secondary"><i class="fas fa-arrow-left"></i></button>
+                            <h3 id="calendarMonth" class="d-inline-block mx-4">Mes</h3>
+                            <button id="nextMonth" class="btn btn-secondary"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                        <div id="calendar" class="mb-4">
+                            <!-- Se cargará el calendario -->
+                        </div>
+                        <div id="calendarAppointments">
+                            <!-- Citas del día -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REPORTES -->
+            <section id="reports-section" class="content-section p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1><i class="fas fa-file-alt"></i> Reportes</h1>
+                    <button id="newReportBtn" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Reporte</button>
+                </div>
+                <div id="reportsList">
+                    <!-- Se cargarán dinámicamente -->
+                </div>
+            </section>
+
+            <!-- CONSENTIMIENTOS -->
+            <section id="consents-section" class="content-section p-4">
+                <h1 class="mb-4"><i class="fas fa-file-contract"></i> Consentimientos</h1>
+                <!-- Se cargarán dinámicamente -->
+            </section>
+
+            <!-- USUARIOS (ADMIN) -->
+            <section id="users-section" class="content-section p-4">
+                <h1 class="mb-4"><i class="fas fa-users"></i> Usuarios</h1>
+                <!-- Se cargarán dinámicamente -->
+            </section>
         </main>
     </div>
 
-    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>

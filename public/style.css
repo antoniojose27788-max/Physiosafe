@@ -1,281 +1,583 @@
-/* style.css - Estilos complementarios para PhysioSafe (Base: Bootstrap 5) */
+/* ============================================================
+   PhysioSafe - Estilos Profesionales y Modernos
+   ============================================================ */
 
 :root {
-    --primary-color: #007bff;
+    --primary-color: #0066cc;
     --secondary-color: #28a745;
-    --border-radius: 8px;
-    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    --transition: transform 0.3s ease, box-shadow 0.3s ease;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --dark-bg: #1a1a2e;
+    --light-bg: #f8f9fa;
+    --sidebar-width: 250px;
+    --transition: all 0.3s ease;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Modificaciones visuales para la página principal */
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Hemos eliminado el background morado y el flexbox que rompían la web */
+    background-color: var(--light-bg);
+    color: #333;
+    line-height: 1.6;
 }
 
-/* Decorador de títulos */
-.divider {
-    height: 4px;
-    width: 60px;
-    border-radius: 2px;
-    margin-top: 10px;
+/* ============================================================
+   PÁGINA PRINCIPAL (INDEX.HTML)
+   ============================================================ */
+
+/* HERO SECTION */
+.hero-section {
+    background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Efectos hover para las tarjetas de servicios */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,176C384,192,480,192,576,176C672,160,768,128,864,122.7C960,117,1056,139,1152,144C1248,149,1344,139,1392,133.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-section img {
+    animation: slideInRight 0.8s ease-out;
+}
+
+.hero-section h1 {
+    animation: slideInLeft 0.8s ease-out;
+}
+
+/* TRANSICIONES DE ENTRADA */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ESTADÍSTICAS */
+.stats-section {
+    padding: 60px 0;
+}
+
+.stats-section h3 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.stats-section p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* SERVICIOS */
+.services-section {
+    padding: 80px 0;
+}
+
 .service-card {
     transition: var(--transition);
+    height: 100%;
 }
 
 .service-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.15) !important;
+    box-shadow: 0 15px 40px rgba(0, 102, 204, 0.2);
 }
 
-/* ==========================================================================
-   ESTILOS DEL DASHBOARD INTERNO Y COMPONENTES (Se mantienen intactos)
-   ========================================================================== */
+.service-icon {
+    display: inline-block;
+    transition: var(--transition);
+}
 
-.dashboard-container {
+.service-card:hover .service-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* ACERCA DE NOSOTROS */
+.about-section {
+    padding: 80px 0;
+}
+
+.about-section img {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.about-section h2 {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.about-section ul li {
+    animation: fadeInUp 0.8s ease-out both;
+}
+
+.about-section li:nth-child(1) { animation-delay: 0.4s; }
+.about-section li:nth-child(2) { animation-delay: 0.5s; }
+.about-section li:nth-child(3) { animation-delay: 0.6s; }
+.about-section li:nth-child(4) { animation-delay: 0.7s; }
+
+/* CONTACTO */
+.contact-section {
+    padding: 80px 0;
+    background: white;
+}
+
+.contact-section i {
+    transition: var(--transition);
+}
+
+.contact-section .col-md-4:hover i {
+    transform: scale(1.3);
+}
+
+/* FOOTER */
+footer {
+    margin-top: 100px;
+}
+
+footer a {
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+footer a:hover {
+    color: white !important;
+}
+
+/* ============================================================
+   MODAL DE AUTENTICACIÓN
+   ============================================================ */
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    border-radius: 15px 15px 0 0;
+}
+
+.auth-form {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: var(--transition);
+    padding: 10px 15px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.25);
+}
+
+.btn {
+    border-radius: 8px;
+    transition: var(--transition);
+    font-weight: 600;
+    padding: 10px 20px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0052a3;
+    border-color: #0052a3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+}
+
+.btn-light:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================
+   DASHBOARD (DASHBOARD.HTML)
+   ============================================================ */
+
+.d-flex {
     display: flex;
-    min-height: 100vh;
-    background-color: #f5f5f5;
 }
 
+/* SIDEBAR */
 .sidebar {
-    width: 250px;
-    background-color: #343a40;
+    width: var(--sidebar-width);
+    background-color: #2c3e50;
     color: white;
-    padding: 20px 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header {
-    padding: 0 20px 20px;
-    border-bottom: 1px solid #495057;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, var(--primary-color), #0052a3);
+}
+
+.sidebar-header h2 {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.user-info {
+    font-size: 0.9rem;
 }
 
 .role-badge {
-    background-color: var(--primary-color);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    text-align: center;
+    font-size: 0.8rem;
+    padding: 4px 12px;
 }
 
 .nav-menu {
     list-style: none;
-    padding: 20px 0;
-    flex: 1;
+    padding: 10px 0;
 }
 
 .nav-link {
     display: block;
-    padding: 12px 20px;
-    color: #adb5bd;
+    padding: 15px 20px;
+    color: #bdc3c7;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: var(--transition);
+    border-left: 4px solid transparent;
 }
 
-.nav-link:hover, .nav-link.active {
-    background-color: #495057;
+.nav-link:hover {
+    background-color: rgba(0, 102, 204, 0.1);
     color: white;
+    border-left-color: var(--primary-color);
+    padding-left: 25px;
 }
 
-.main-content {
-    flex: 1;
+.nav-link.active {
+    background-color: rgba(0, 102, 204, 0.2);
+    color: white;
+    border-left-color: var(--primary-color);
+}
+
+.nav-link i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* CONTENIDO PRINCIPAL */
+main {
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
     padding: 20px;
 }
 
 .content-section {
     display: none;
+    animation: fadeInUp 0.3s ease-out;
 }
 
 .content-section.active {
     display: block;
 }
 
-.status {
-    padding: 4px 10px;
+/* CARDS DE ESTADÍSTICAS */
+.card {
     border-radius: 12px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
+    border: none;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
 }
 
-.status.pendiente {
-    background-color: #ffc107;
-    color: #856404;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-.status.completada {
-    background-color: var(--secondary-color);
-    color: white;
+.card-body {
+    padding: 25px;
 }
 
-/* Notificaciones flotantes */
-.notification-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    max-width: 400px;
-}
-
-.notification {
+/* TABLAS */
+.table {
     background: white;
-    padding: 15px 20px;
-    border-radius: var(--border-radius);
-    margin-bottom: 10px;
-    box-shadow: var(--box-shadow);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    animation: slideIn 0.3s ease;
-    border-left: 4px solid var(--primary-color);
-}
-
-/* ==========================================================================
-   CSS PREMIUM PARA EL DASHBOARD (TFG DE SOBRESALIENTE)
-   ========================================================================== */
-
-.dashboard-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa;
-    height: 100vh;
+    border-radius: 12px;
     overflow: hidden;
 }
 
-/* Sidebar moderna */
-.sidebar-modern {
-    width: 280px;
-    background: #ffffff;
-    height: 100vh;
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+}
+
+/* NOTIFICACIONES */
+#notificationContainer {
+    max-width: 400px;
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: var(--shadow);
+    animation: slideInRight 0.3s ease-out;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error, .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* BOTONES */
+.btn-sm {
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+/* CALENDARIO */
+.calendar-controls {
     display: flex;
-    flex-direction: column;
-    padding: 2rem 1rem;
-    border-right: 1px solid rgba(0,0,0,0.05);
-    z-index: 10;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.logo-icon {
-    width: 40px;
-    height: 40px;
+.calendar-controls h3 {
+    min-width: 200px;
+    text-align: center;
 }
 
-.tracking-tight { letter-spacing: -0.5px; }
-.tracking-wide { letter-spacing: 1px; }
-
-/* Menú de navegación lateral */
-.custom-pills .nav-link {
-    color: #64748b;
-    border-radius: 0.75rem;
-    padding: 0.8rem 1.2rem;
-    transition: all 0.3s ease;
+.calendar-day-name {
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 6px;
 }
 
-.custom-pills .nav-link:hover {
-    background-color: #f1f5f9;
-    color: #0f172a;
-    transform: translateX(5px);
+.calendar-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
 }
 
-.custom-pills .nav-link.active {
-    background-color: #007bff; /* Color principal */
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+.calendar-day:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
 }
 
-/* Contenido Principal */
-.main-wrapper {
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.top-navbar {
-    height: 80px;
-    position: sticky;
-    top: 0;
-    z-index: 5;
-}
-
-.cursor-pointer { cursor: pointer; }
-
-/* Avatar y Componentes */
-.avatar-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    transition: transform 0.2s ease;
-}
-
-.avatar-circle:hover {
-    transform: scale(1.05);
-}
-
-.icon-shape {
-    width: 60px;
-    height: 60px;
-}
-
-/* Efectos de tarjeta (Hover) */
-.stat-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.08) !important;
-}
-
-/* Sistema de Pestañas SPA */
-.content-section {
-    display: none;
-}
-
-.content-section.active {
-    display: block;
-}
-
-.fade-in {
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Tabla moderna */
-.table > :not(caption) > * > * {
-    padding: 1rem 1rem;
-    background-color: transparent;
-}
-
-.table tbody tr {
-    transition: background-color 0.2s ease;
-}
-
-.table tbody tr:hover {
-    background-color: #f8fafc;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(400px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
+/* RESPONSIVE */
 @media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column;
-    }
     .sidebar {
         width: 100%;
-        order: 2;
+        height: auto;
+        position: static;
+        flex-direction: row;
+        margin-bottom: 20px;
     }
-    .main-content {
-        order: 1;
+
+    main {
+        margin-left: 0;
+    }
+
+    .nav-menu {
+        display: flex;
+        flex-direction: row;
+        padding: 0;
+    }
+
+    .nav-link {
+        padding: 10px 15px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        border-left: none;
+        border-bottom-color: var(--primary-color);
+    }
+
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .service-card {
+        margin-bottom: 20px;
+    }
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* ============================================================
+   ANIMACIONES AVANZADAS
+   ============================================================ */
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* EFECTOS DE CARGA */
+.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* EFECTOS DE HOVER EN CARDS */
+.card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.card:hover::before {
+    left: 100%;
+}
+
+/* SCROLL SUAVE */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ESTILOS PARA INPUTS */
+.form-control::placeholder {
+    color: #999;
+}
+
+.form-control:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+/* BADGES Y ETIQUETAS */
+.badge {
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-primary {
+    background-color: var(--primary-color);
+}
+
+.badge-success {
+    background-color: var(--secondary-color);
+}
+
+/* ============================================================
+   IMPRESIÓN
+   ============================================================ */
+
+@media print {
+    .sidebar, .nav-menu, .btn, footer {
+        display: none;
+    }
+
+    main {
+        margin-left: 0;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
     }
 }

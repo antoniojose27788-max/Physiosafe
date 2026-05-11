@@ -1,148 +1,300 @@
-# PhysioSafe - Gestión de Clínica de Fisioterapia
+# PhysioSafe - Sistema de Gestión de Clínica de Fisioterapia
 
-Aplicación web completa para la gestión de una clínica de fisioterapia, desarrollada con Node.js, Express, PostgreSQL y Vanilla JavaScript.
+## 📋 Descripción
 
-## 🚀 Características
+PhysioSafe es una aplicación web moderna y completa para la gestión integral de una clínica de fisioterapia. Permite a pacientes y fisioterapeutas interactuar en un sistema diseñado con tecnología de punta, garantizando eficiencia, seguridad y experiencia de usuario excepcional.
 
-- **Autenticación JWT**: Sistema seguro de login y registro con tokens JWT
-- **Gestión de Usuarios**: Roles de administrador, fisioterapeuta y paciente
-- **Citas Médicas**: Programación y seguimiento de citas
-- **Reportes**: Documentación de tratamientos y evoluciones
-- **Consentimientos**: Gestión de consentimientos informados
-- **Interfaz Moderna**: Frontend responsive con diseño profesional
+## ✨ Características Principales
 
-## 🛠️ Tecnologías Utilizadas
+### 👤 Autenticación y Roles
+- Registro y login seguro con JWT
+- Tres roles: Admin, Fisioterapeuta y Paciente
+- Tokens con expiración automática
+- Contraseñas encriptadas con bcrypt
+
+### 📅 Gestión de Citas
+- Crear, editar y eliminar citas
+- Calendario interactivo
+- Prevención de conflictos de horarios
+- Historial de citas completado/pendiente
+
+### 📊 Dashboard Personalizado
+- Estadísticas en tiempo real
+- Vista general de citas y reportes
+- Notificaciones de eventos
+
+### 📄 Reportes
+- Crear reportes de tratamiento
+- Adjuntar documentos/imágenes
+- Seguimiento de progreso
+- Acceso según permisos
+
+### ✓ Consentimientos
+- Registro de consentimientos informados
+- Aceptación de términos
+- Historial de firmas
+
+### 👥 Gestión de Usuarios (Admin)
+- Crear, editar y eliminar usuarios
+- Asignación de roles
+- Visualización de estadísticas
+
+### 🎨 Interfaz Moderna
+- Bootstrap 5 responsive
+- Diseño elegante y profesional
+- Transiciones suaves
+- Optimizado para móvil
+
+## 🛠️ Stack Tecnológico
 
 ### Backend
-- **Node.js** - Entorno de ejecución
-- **Express.js** - Framework web
+- **Node.js** - Runtime de JavaScript
+- **Express** - Framework web
 - **PostgreSQL** - Base de datos
-- **Sequelize** - ORM para base de datos
-- **JWT** - Autenticación con tokens
-- **bcrypt** - Hashing de contraseñas
+- **Sequelize** - ORM para SQL
+- **JWT** - Autenticación segura
+- **bcrypt** - Encriptación de contraseñas
 
 ### Frontend
 - **HTML5** - Estructura
-- **CSS3** - Estilos y diseño responsive
-- **Vanilla JavaScript** - Lógica del cliente
+- **CSS3** - Estilos avanzados
+- **Bootstrap 5** - Framework CSS
+- **JavaScript Vanilla** - Lógica cliente
+- **FontAwesome** - Iconografía
 
-## 📋 Prerrequisitos
+## 📦 Instalación
 
-- Node.js (versión 16 o superior)
-- Docker y Docker Compose
-- PostgreSQL (opcional, se incluye en Docker)
+### Prerequisitos
+- Node.js (v14 o superior)
+- PostgreSQL (v12 o superior)
+- npm o yarn
 
-## 🔧 Instalación
+### Pasos de Instalación
 
-1. **Clona el repositorio**
-   ```bash
-   git clone <url-del-repositorio>
-   cd physiosafe
-   ```
-
-2. **Instala las dependencias**
-   ```bash
-   npm install
-   ```
-
-3. **Configura la base de datos**
-   - Instala Docker Desktop
-   - Ejecuta: `docker-compose up -d`
-   - La base de datos estará disponible en `localhost:5432`
-
-4. **Configura las variables de entorno**
-   - Edita el archivo `.env` si es necesario
-   - Las variables por defecto están configuradas para desarrollo local
-
-5. **Inicia el servidor**
-   ```bash
-   npm start
-   ```
-
-6. **Accede a la aplicación**
-   - Abre tu navegador en `http://localhost:3000`
-   - Registra un usuario administrador para comenzar
-
-## 📊 Estructura del Proyecto
-
-```
-physiosafe/
-├── config/
-│   └── db.js              # Configuración de la base de datos
-├── models/
-│   ├── index.js          # Definición de modelos y asociaciones
-│   ├── User.js           # Modelo de Usuario
-│   ├── Appointment.js    # Modelo de Cita
-│   ├── Report.js         # Modelo de Reporte
-│   └── Consent.js        # Modelo de Consentimiento
-├── controllers/
-│   ├── authController.js # Lógica de autenticación
-│   └── apiController.js  # Lógica de la API
-├── routes/
-│   ├── authRoutes.js     # Rutas de autenticación
-│   └── apiRoutes.js      # Rutas de la API
-├── public/
-│   ├── index.html        # Página de login/registro
-│   ├── dashboard.html    # Panel principal
-│   ├── style.css         # Estilos CSS
-│   ├── app.js            # Lógica general del frontend
-│   └── dashboard.js      # Lógica del dashboard
-├── server.js             # Archivo principal del servidor
-├── package.json          # Dependencias y scripts
-├── docker-compose.yml    # Configuración de Docker
-└── .env                  # Variables de entorno
+1. **Clonar el repositorio**
+```bash
+git clone <url-repositorio>
+cd Physiosafe
 ```
 
-## 🔐 Roles de Usuario
+2. **Instalar dependencias**
+```bash
+npm install
+```
 
-- **Administrador**: Acceso completo a todas las funciones, gestión de usuarios
-- **Fisioterapeuta**: Gestión de citas, reportes y pacientes asignados
-- **Paciente**: Visualización de sus citas, reportes y consentimientos
+3. **Configurar variables de entorno**
 
-## 📡 API Endpoints
+Editar el archivo `.env`:
+```env
+# Base de Datos
+DATABASE_URL=postgresql://physiouser:SecretPassword123!@localhost:5432/physiodb
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=physiodb
+DB_USER=physiouser
+DB_PASSWORD=SecretPassword123!
 
-### Autenticación
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Inicio de sesión
-- `GET /api/auth/verify` - Verificación de token
+# Servidor
+PORT=3000
+NODE_ENV=development
 
-### API General (requiere autenticación)
-- `GET /api/users` - Lista de usuarios (admin)
-- `POST /api/users` - Crear usuario (admin)
-- `GET /api/appointments` - Citas del usuario
-- `POST /api/appointments` - Crear cita
-- `GET /api/reports` - Reportes del usuario
-- `POST /api/reports` - Crear reporte
-- `GET /api/consents` - Consentimientos del usuario
-- `POST /api/consents` - Firmar consentimiento
+# JWT
+JWT_SECRET=MiClaveSuperSecretaTFG2026
 
-## 🧪 Desarrollo
+# Frontend
+FRONTEND_URL=http://localhost:3000
 
-Para desarrollo con recarga automática:
+# Encriptación
+ENCRYPTION_SECRET=ClaveSuperSecretaPhysioSafe2026!
+```
+
+4. **Configurar Base de Datos**
+
+Crear la base de datos en PostgreSQL:
+```sql
+CREATE DATABASE physiodb;
+CREATE USER physiouser WITH PASSWORD 'SecretPassword123!';
+ALTER ROLE physiouser SET client_encoding TO 'utf8';
+ALTER ROLE physiouser SET default_transaction_isolation TO 'read committed';
+ALTER ROLE physiouser SET default_transaction_deferrable TO on;
+ALTER ROLE physiouser SET default_time_zone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE physiodb TO physiouser;
+```
+
+5. **Iniciar la aplicación**
+
+Modo desarrollo:
 ```bash
 npm run dev
 ```
 
-## 📝 Notas de Producción
+Modo producción:
+```bash
+npm start
+```
 
-- Cambia el `JWT_SECRET` en producción
-- Configura `NODE_ENV=production`
-- Usa HTTPS en producción
-- Configura CORS para el dominio de producción
-- Implementa rate limiting para la API
+La aplicación estará disponible en: **http://localhost:3000**
 
-## 🤝 Contribución
+## 🗂️ Estructura de Carpetas
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+```
+Physiosafe/
+├── app/                    # Archivos de configuración
+├── config/
+│   └── db.js              # Configuración de base de datos
+├── controllers/
+│   ├── authController.js  # Lógica de autenticación
+│   └── apiController.js   # Lógica de API
+├── models/
+│   ├── index.js           # Exportación de modelos
+│   ├── User.js            # Modelo de usuario
+│   ├── Appointment.js     # Modelo de cita
+│   ├── Report.js          # Modelo de reporte
+│   └── Consent.js         # Modelo de consentimiento
+├── routes/
+│   ├── authRoutes.js      # Rutas de autenticación
+│   └── apiRoutes.js       # Rutas de API
+├── middlewares/
+│   └── authMiddleware.js  # Middleware de autenticación
+├── public/
+│   ├── index.html         # Página principal
+│   ├── dashboard.html     # Dashboard
+│   ├── app.js             # Lógica frontend
+│   ├── dashboard.js       # Lógica dashboard
+│   └── style.css          # Estilos
+├── server.js              # Servidor principal
+├── package.json           # Dependencias
+├── .env                   # Variables de entorno
+└── README.md              # Este archivo
+```
 
-## 📄 Licencia
+## 🔐 Seguridad
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+- ✅ Contraseñas encriptadas con bcrypt
+- ✅ Autenticación por JWT
+- ✅ CORS configurado
+- ✅ Validación de entrada
+- ✅ Protección de rutas
+- ✅ Headers de seguridad
+- ✅ Límite de tamaño de payload
+
+## 📡 API Endpoints
+
+### Autenticación
+```
+POST   /api/auth/register     - Registrar usuario
+POST   /api/auth/login        - Iniciar sesión
+GET    /api/auth/me           - Obtener usuario actual
+POST   /api/auth/logout       - Cerrar sesión
+PUT    /api/auth/update       - Actualizar usuario
+```
+
+### Citas
+```
+GET    /api/appointments      - Listar citas
+POST   /api/appointments      - Crear cita
+PUT    /api/appointments/:id  - Actualizar cita
+DELETE /api/appointments/:id  - Eliminar cita
+```
+
+### Reportes
+```
+GET    /api/reports           - Listar reportes
+POST   /api/reports           - Crear reporte
+GET    /api/reports/:id       - Obtener reporte
+```
+
+### Consentimientos
+```
+GET    /api/consents          - Listar consentimientos
+POST   /api/consents          - Crear consentimiento
+```
+
+### Estadísticas
+```
+GET    /api/stats             - Obtener estadísticas
+GET    /api/users             - Listar usuarios (admin)
+GET    /api/users/:id         - Obtener usuario
+```
+
+## 🧪 Pruebas
+
+### Usuarios de Prueba
+
+**Admin**
+- Email: admin@physiosafe.es
+- Contraseña: Admin123!
+
+**Fisioterapeuta**
+- Email: fisio@physiosafe.es
+- Contraseña: Fisio123!
+
+**Paciente**
+- Email: paciente@physiosafe.es
+- Contraseña: Paciente123!
+
+## 🚀 Despliegue
+
+### Con Docker Compose
+```bash
+docker-compose up -d
+```
+
+### En Producción
+```bash
+# Instalar dependencias de producción
+npm install --production
+
+# Iniciar con PM2
+npm install -g pm2
+pm2 start server.js --name "physiosafe"
+pm2 save
+pm2 startup
+```
+
+## 📝 Variables de Entorno
+
+| Variable | Descripción | Valor Defecto |
+|----------|-------------|---------------|
+| `DATABASE_URL` | URL de conexión PostgreSQL | `postgresql://...` |
+| `PORT` | Puerto del servidor | `3000` |
+| `NODE_ENV` | Ambiente (development/production) | `development` |
+| `JWT_SECRET` | Clave secreta para JWT | `MiClaveSuperSecretaTFG2026` |
+| `FRONTEND_URL` | URL del frontend | `http://localhost:3000` |
+
+## 🐛 Troubleshooting
+
+### Error de conexión a BD
+- Verificar que PostgreSQL está corriendo
+- Verificar credenciales en .env
+- Verificar que la base de datos existe
+
+### Puerto en uso
+```bash
+# Cambiar puerto en .env o usar:
+PORT=3001 npm start
+```
+
+### Node modules corrupto
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
 
 ## 📞 Soporte
 
-Para soporte, crea un issue en el repositorio o contacta al equipo de desarrollo.
+Para reportar problemas o sugerencias, contacta con:
+- Email: info@physiosafe.es
+- Teléfono: +34 912 345 678
+
+## 📄 Licencia
+
+Este proyecto está bajo licencia ISC.
+
+## 👨‍💼 Autor
+
+Desarrollado como solución profesional para gestión de clínicas de fisioterapia.
+
+---
+
+**PhysioSafe v1.0.0** - Tu salud, nuestra prioridad ❤️

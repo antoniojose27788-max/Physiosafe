@@ -1,62 +1,61 @@
-// app.js - Lógica del frontend para PhysioSafe usando Vanilla JavaScript
+// app.js - Lógica del Frontend para PhysioSafe
 
-// Variables globales
-const API_BASE_URL = 'http://localhost:3000/api'; // URL base de la API
-let currentUser = null; // Usuario actualmente logueado
-let authToken = null; // Token JWT almacenado
+const API_BASE_URL = 'http://localhost:3000/api';
+let authToken = null;
 
-// Elementos del DOM
-const loginForm = document.getElementById('loginForm');
-const registerForm = document.getElementById('registerForm');
-const loginSection = document.getElementById('login-form');
-const registerSection = document.getElementById('register-form');
-const showRegisterLink = document.getElementById('showRegister');
-const showLoginLink = document.getElementById('showLogin');
-const messageDiv = document.getElementById('message');
+// ============================================================
+// INICIALIZACIÓN
+// ============================================================
 
-// Función para mostrar mensajes al usuario
-function showMessage(message, type = 'success') {
-    messageDiv.textContent = message;
-    messageDiv.className = `message ${type}`;
-    messageDiv.classList.remove('hidden');
+document.addEventListener('DOMContentLoaded', () => {
+    // Event listeners para formularios
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
 
-    // Ocultar el mensaje después de 5 segundos
-    setTimeout(() => {
-        messageDiv.classList.add('hidden');
-    }, 5000);
-}
-
-// Función para alternar entre formularios de login y registro
-function switchForm(showForm) {
-    if (showForm === 'register') {
-        loginSection.classList.remove('active');
-        registerSection.classList.add('active');
-    } else {
-        registerSection.classList.remove('active');
-        loginSection.classList.add('active');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
     }
-    // Limpiar mensajes previos
-    messageDiv.classList.add('hidden');
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
+
+    // Mostrar formulario de login por defecto
+    showLoginForm();
+});
+
+// ============================================================
+// FUNCIONES DE UTILIDAD
+// ============================================================
+
+function showNotification(message, type = 'success') {
+    const container = document.getElementById('notificationContainer');
+    if (!container) return;
+
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+    container.appendChild(notification);
+
+    setTimeout(() => notification.remove(), 5000);
 }
 
-// Función para hacer peticiones HTTP a la API
-async function apiRequest(endpoint, method = 'GET', data = null, options = {}) {
+async function apiRequest(endpoint, method = 'GET', data = null) {
     const url = `${API_BASE_URL}${endpoint}`;
     const config = {
-        method: method,
+        method,
         headers: {
-            'Content-Type': 'application/json',
-            ...options.headers
-        },
-        ...options
+            'Content-Type': 'application/json'
+        }
     };
 
-    // Agregar token si existe
     if (authToken) {
         config.headers.Authorization = `Bearer ${authToken}`;
     }
 
-    // Agregar cuerpo si hay datos
     if (data && method !== 'GET') {
         config.body = JSON.stringify(data);
     }
@@ -66,179 +65,142 @@ async function apiRequest(endpoint, method = 'GET', data = null, options = {}) {
         const responseData = await response.json();
 
         if (!response.ok) {
-            throw new Error(responseData.message || responseData.error || 'Error en la petición');
+            throw new Error(responseData.error || responseData.message || 'Error en la petición');
         }
 
         return responseData;
     } catch (error) {
         console.error('Error en API:', error);
+        showNotification(error.message, 'error');
         throw error;
     }
 }
 
-// Función para manejar el login
+// ============================================================
+// GESTIÓN DE FORMULARIOS
+// ============================================================
+
+function showLoginForm() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    if (loginForm && registerForm) {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+    }
+}
+
+function showRegisterForm() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+
+    if (loginForm && registerForm) {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+    }
+}
+
+function switchForm(form) {
+    if (form === 'login') {
+        showLoginForm();
+    } else if (form === 'register') {
+        showRegisterForm();
+    }
+}
+
+// ============================================================
+// AUTENTICACIÓN
+// ============================================================
+
 async function handleLogin(event) {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const loginData = {
-        email: formData.get('email'),
-        password: formData.get('password')
-    };
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
 
-    // Deshabilitar botón durante la petición
     const submitBtn = event.target.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Iniciando sesión...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
 
     try {
-        const data = await apiRequest('/auth/login', 'POST', loginData);
+        const response = await apiRequest('/auth/login', 'POST', {
+            email,
+            password
+        });
 
-        // Guardar token y usuario
-        authToken = data.token;
-        currentUser = data.user;
+        authToken = response.token;
         localStorage.setItem('authToken', authToken);
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem('currentUser', JSON.stringify(response.usuario));
 
-        showMessage('Inicio de sesión exitoso. Redirigiendo...', 'success');
+        showNotification('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
 
-        // Redirigir al dashboard después de 1 segundo
         setTimeout(() => {
             window.location.href = 'dashboard.html';
-        }, 1000);
+        }, 1500);
 
     } catch (error) {
-        showMessage(error.message, 'error');
+        showNotification('Error al iniciar sesión: ' + error.message, 'error');
     } finally {
-        // Rehabilitar botón
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Iniciar Sesión';
+        submitBtn.innerHTML = 'Iniciar Sesión';
     }
 }
 
-// Función para manejar el registro
 async function handleRegister(event) {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const registerData = {
-        nombre: formData.get('nombre'),
-        email: formData.get('email'),
-        password: formData.get('password'),
-        rol: formData.get('rol')
-    };
+    const nombre = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const rol = document.getElementById('registerRole').value;
 
-    // Deshabilitar botón durante la petición
+    // Validar que se haya seleccionado un rol
+    if (!rol) {
+        showNotification('Por favor selecciona un tipo de usuario', 'error');
+        return;
+    }
+
     const submitBtn = event.target.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Registrando...';
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
 
     try {
-        const data = await apiRequest('/auth/register', 'POST', registerData);
+        await apiRequest('/auth/register', 'POST', {
+            nombre,
+            email,
+            password,
+            rol
+        });
 
-        showMessage('Registro exitoso. Ahora puedes iniciar sesión.', 'success');
+        showNotification('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success');
 
-        // Cambiar al formulario de login
+        // Limpiar formulario
+        document.getElementById('registerForm').reset();
+
+        // Cambiar a login
         setTimeout(() => {
-            switchForm('login');
-        }, 2000);
+            showLoginForm();
+        }, 1500);
 
     } catch (error) {
-        showMessage(error.message, 'error');
+        showNotification('Error al registrarse: ' + error.message, 'error');
     } finally {
-        // Rehabilitar botón
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Registrarse';
+        submitBtn.innerHTML = 'Registrarse';
     }
 }
 
-// Función para verificar si el usuario ya está logueado
-function checkAuthStatus() {
-    const token = localStorage.getItem('authToken');
-    const user = localStorage.getItem('currentUser');
+// ============================================================
+// SCROLL SUAVE
+// ============================================================
 
-    if (token && user) {
-        authToken = token;
-        currentUser = JSON.parse(user);
-        // Si estamos en index.html y el usuario está logueado, redirigir al dashboard
-        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-            window.location.href = 'dashboard.html';
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const target = e.target.getAttribute('href');
+        const element = document.querySelector(target);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
         }
     }
-}
-
-// Función para cerrar sesión
-function logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
-    authToken = null;
-    currentUser = null;
-    window.location.href = 'index.html';
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-    // Verificar estado de autenticación al cargar la página
-    checkAuthStatus();
-
-    // Event listeners para navegación en landing page
-    if (loginBtn) {
-        loginBtn.addEventListener('click', () => showAuthModal('login'));
-    }
-    if (registerBtn) {
-        registerBtn.addEventListener('click', () => showAuthModal('register'));
-    }
-
-    // Event listeners para navegación suave
-    document.querySelectorAll('.main-nav a[href^="#"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = e.target.getAttribute('href').substring(1);
-            scrollToSection(targetId);
-        });
-    });
-
-    // Event listener para formulario de contacto
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleContact);
-    }
-
-    // Event listeners para formularios de autenticación (si existen en la página)
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
-    }
-    if (showRegisterLink) {
-        showRegisterLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            switchForm('register');
-        });
-    }
-    if (showLoginLink) {
-        showLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            switchForm('login');
-        });
-    }
-
-    // Event listeners para modal de autenticación
-    if (closeAuthModal) {
-        closeAuthModal.addEventListener('click', closeAuthModalFunc);
-    }
-    if (authModal) {
-        window.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                closeAuthModalFunc();
-            }
-        });
-    }
 });
-
-// Exportar funciones para uso en otros archivos (si es necesario)
-window.PhysioSafe = {
-    apiRequest,
-    showMessage,
-    logout
-};

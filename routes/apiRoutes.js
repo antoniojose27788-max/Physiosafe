@@ -1,51 +1,41 @@
-// routes/apiRoutes.js
-// Rutas generales de la API (citas, reportes, consentimientos, etc.)
-
 const express = require('express');
-const {
-  getUsers, createUser, deleteUser, requireRole,
-  getAppointments, createAppointment, updateAppointment, deleteAppointment, getMonthAppointments,
-  getReports, createReport, updateReport, deleteReport,
-  getConsents, signConsent,
-  verifyToken
-} = require('../controllers/apiController'); // Importamos el controlador
 const router = express.Router();
+const apiController = require('../controllers/apiController');
+const authGuard = require('../middlewares/authMiddleware');
 
-// Middleware para proteger todas las rutas de la API
-router.use(verifyToken);
+// Aplicamos el protector a todas las rutas
+router.use(authGuard);
 
-// Rutas para usuarios (solo admin)
-router.route('/users')
-  .get(requireRole(['admin']), getUsers)
-  .post(requireRole(['admin']), createUser);
+// ============================================================
+// RUTAS DE CITAS (APPOINTMENTS)
+// ============================================================
 
-router.route('/users/:id')
-  .delete(requireRole(['admin']), deleteUser);
+router.get('/appointments', apiController.getAppointments);
+router.post('/appointments', apiController.createAppointment);
+router.put('/appointments/:id', apiController.updateAppointment);
+router.delete('/appointments/:id', apiController.deleteAppointment);
 
-// Rutas para citas
-router.route('/appointments')
-  .get(getAppointments)
-  .post(createAppointment);
+// ============================================================
+// RUTAS DE REPORTES (REPORTS)
+// ============================================================
 
-router.route('/appointments/:id')
-  .put(updateAppointment)
-  .delete(deleteAppointment);
+router.get('/reports', apiController.getReports);
+router.post('/reports', apiController.createReport);
+router.get('/reports/:id', apiController.getReport);
 
-// Ruta para obtener citas de un mes específico (para calendario)
-router.get('/appointments/calendar/month', getMonthAppointments);
+// ============================================================
+// RUTAS DE CONSENTIMIENTOS (CONSENTS)
+// ============================================================
 
-// Rutas para reportes
-router.route('/reports')
-  .get(getReports)
-  .post(createReport);
+router.get('/consents', apiController.getConsents);
+router.post('/consents', apiController.createConsent);
 
-router.route('/reports/:id')
-  .put(updateReport)
-  .delete(deleteReport);
+// ============================================================
+// RUTAS DE ESTADÍSTICAS Y USUARIOS
+// ============================================================
 
-// Rutas para consentimientos
-router.route('/consents')
-  .get(getConsents)
-  .post(signConsent);
+router.get('/stats', apiController.getStats);
+router.get('/users', apiController.getUsers);
+router.get('/users/:id', apiController.getUser);
 
 module.exports = router;
