@@ -9,6 +9,8 @@ const User = require('./User');
 const Appointment = require('./Appointment');
 const Report = require('./Report');
 const Consent = require('./Consent');
+const Bill = require('./Bill');
+const Record = require('./Record');
 
 // Definimos las asociaciones entre modelos
 
@@ -35,6 +37,18 @@ User.hasMany(Consent, { foreignKey: 'user_id', as: 'consents' });
 // Un Consent pertenece a un User (paciente)
 Consent.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
+// Bills (facturas)
+User.hasMany(Bill, { foreignKey: 'paciente_id', as: 'billsAsPaciente' });
+Bill.belongsTo(User, { foreignKey: 'paciente_id', as: 'paciente' });
+User.hasMany(Bill, { foreignKey: 'creado_por_id', as: 'billsCreated' });
+Bill.belongsTo(User, { foreignKey: 'creado_por_id', as: 'creadoPor' });
+
+// Records (expediente clínico)
+User.hasMany(Record, { foreignKey: 'paciente_id', as: 'recordsAsPaciente' });
+Record.belongsTo(User, { foreignKey: 'paciente_id', as: 'paciente' });
+User.hasMany(Record, { foreignKey: 'fisio_id', as: 'recordsAsFisio' });
+Record.belongsTo(User, { foreignKey: 'fisio_id', as: 'fisio' });
+
 // Función para sincronizar la base de datos (crear tablas si no existen)
 // Solo para desarrollo; en producción, usar migraciones
 const syncDatabase = async () => {
@@ -53,5 +67,7 @@ module.exports = {
   Appointment,
   Report,
   Consent,
+  Bill,
+  Record,
   syncDatabase
 };
