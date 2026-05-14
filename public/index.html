@@ -4,287 +4,548 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhysioSafe - Clínica Digital de Fisioterapia</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              kanit: ['Kanit', 'sans-serif'],
+            },
+            colors: {
+              navy: '#0C0C0C',
+              'navy-light': '#1A1A1A',
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Bootstrap CSS (needed for modals and toasts, scoped using normal classes where possible) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.js"></script>
+
+    <!-- Legacy Style just in case -->
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        body, html, #root {
+            background-color: #0C0C0C;
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: white;
+            overflow-x: hidden;
+        }
+        .hero-heading {
+            background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
 <body>
-    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+    <!-- Legacy Modals wrapper -->
+    <div id="legacy-ui">
+        <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
 
-    <header class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-clinic-medical"></i> PhysioSafe
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">Contacto</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
-
-    <section id="inicio" class="hero-section py-5 bg-gradient text-white">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4">
-                    <h1 class="display-4 fw-bold mb-4">Recupera tu Movilidad con Expertos</h1>
-                    <p class="lead mb-4">PhysioSafe combina tecnología avanzada con tratamientos personalizados para acelerar tu recuperación y mejorar tu calidad de vida.</p>
-                    <div class="d-flex gap-3">
-                        <button class="btn btn-light btn-lg" data-bs-toggle="modal" data-bs-target="#authModal" onclick="showLoginForm()">
-                            <i class="fas fa-sign-in-alt"></i> Acceder
-                        </button>
-                        <button class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#authModal" onclick="showRegisterForm()">
-                            <i class="fas fa-user-plus"></i> Registrarse
-                        </button>
+        <!-- Modal Auth -->
+        <div class="modal fade" id="authModal" tabindex="-1" style="color: black;">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: var(--radius-lg);">
+                    <div class="modal-header border-bottom p-4">
+                        <h5 class="modal-title fw-bold" id="authModalLabel" style="font-family: 'Kanit', sans-serif;">Acceso Pacientes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                </div>
-                <div class="col-lg-6">
-                    <img src="https://images.unsplash.com/photo-1576091160399-0ff8c3a9e7d3?w=500&h=400&fit=crop" alt="Fisioterapia Profesional" class="img-fluid rounded shadow">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="stats-section py-5 bg-light">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <h3 class="text-primary fw-bold">500+</h3>
-                    <p>Pacientes Satisfechos</p>
-                </div>
-                <div class="col-md-3">
-                    <h3 class="text-primary fw-bold">15+</h3>
-                    <p>Años de Experiencia</p>
-                </div>
-                <div class="col-md-3">
-                    <h3 class="text-primary fw-bold">98%</h3>
-                    <p>Tasa de Satisfacción</p>
-                </div>
-                <div class="col-md-3">
-                    <h3 class="text-primary fw-bold">24/7</h3>
-                    <p>Disponible Siempre</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="servicios" class="services-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-5 fw-bold">Nuestros Servicios</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card service-card border-0 shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <div class="service-icon mb-3">
-                                <i class="fas fa-running text-primary" style="font-size: 3rem;"></i>
+                    <div class="modal-body p-4">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-muted">Correo Electrónico</label>
+                                <input type="email" class="form-control form-control-lg bg-light" id="loginEmail" required>
                             </div>
-                            <h5 class="card-title">Rehabilitación Deportiva</h5>
-                            <p class="card-text">Tratamientos especializados para atletas con lesiones musculares y articulares.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card service-card border-0 shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <div class="service-icon mb-3">
-                                <i class="fas fa-user-injured text-primary" style="font-size: 3rem;"></i>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-muted">Contraseña</label>
+                                <input type="password" class="form-control form-control-lg bg-light" id="loginPassword" required>
                             </div>
-                            <h5 class="card-title">Fisioterapia Geriátrica</h5>
-                            <p class="card-text">Cuidados específicos para adultos mayores, mejorando movilidad.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card service-card border-0 shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <div class="service-icon mb-3">
-                                <i class="fas fa-heart text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Prenatal y Postnatal</h5>
-                            <p class="card-text">Acompañamiento durante el embarazo y postparto para mantener bienestar.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card service-card border-0 shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <div class="service-icon mb-3">
-                                <i class="fas fa-briefcase text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Lesiones Laborales</h5>
-                            <p class="card-text">Recuperación rápida de accidentes de trabajo y enfermedades profesionales.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card service-card border-0 shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <div class="service-icon mb-3">
-                                <i class="fas fa-hand-holding-medical text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Terapia Manual</h5>
-                            <p class="card-text">Técnicas manuales avanzadas para aliviar dolor y restaurar función.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card service-card border-0 shadow-sm h-100">
-                        <div class="card-body text-center">
-                            <div class="service-icon mb-3">
-                                <i class="fas fa-bolt text-primary" style="font-size: 3rem;"></i>
-                            </div>
-                            <h5 class="card-title">Electroterapia</h5>
-                            <p class="card-text">Tratamientos con corrientes eléctricas para reducción de inflamación.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill" style="background: linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%); border: none;">Iniciar Sesión</button>
+                            <p class="text-center mt-3 mb-0 text-muted"><small>¿No tienes cuenta? <a href="#" onclick="showRegisterForm()" class="text-primary text-decoration-none fw-bold">Regístrate</a></small></p>
+                        </form>
 
-    <section id="about" class="about-section py-5 bg-light">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4">
-                    <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500&h=400&fit=crop" alt="Nosotros" class="img-fluid rounded shadow">
-                </div>
-                <div class="col-lg-6">
-                    <h2 class="fw-bold mb-4">¿Por Qué Elegir PhysioSafe?</h2>
-                    <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <h5 class="text-primary"><i class="fas fa-check-circle"></i> Profesionales Certificados</h5>
-                            <p>Equipo de fisioterapeutas con más de 15 años de experiencia.</p>
-                        </li>
-                        <li class="mb-3">
-                            <h5 class="text-primary"><i class="fas fa-check-circle"></i> Tecnología Avanzada</h5>
-                            <p>Equipos de última generación para tratamientos efectivos.</p>
-                        </li>
-                        <li class="mb-3">
-                            <h5 class="text-primary"><i class="fas fa-check-circle"></i> Atención Personalizada</h5>
-                            <p>Planes de tratamiento adaptados a cada paciente.</p>
-                        </li>
-                        <li class="mb-3">
-                            <h5 class="text-primary"><i class="fas fa-check-circle"></i> Seguimiento Continuo</h5>
-                            <p>Monitoreo digital de tu progreso durante todo el tratamiento.</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="contact-section py-5">
-        <div class="container">
-            <h2 class="text-center mb-5 fw-bold">Contacto</h2>
-            <div class="row">
-                <div class="col-md-4 text-center mb-4">
-                    <i class="fas fa-phone text-primary" style="font-size: 2rem;"></i>
-                    <h5 class="mt-3">Teléfono</h5>
-                    <p>+34 912 345 678</p>
-                </div>
-                <div class="col-md-4 text-center mb-4">
-                    <i class="fas fa-envelope text-primary" style="font-size: 2rem;"></i>
-                    <h5 class="mt-3">Email</h5>
-                    <p>info@physiosafe.es</p>
-                </div>
-                <div class="col-md-4 text-center mb-4">
-                    <i class="fas fa-map-marker-alt text-primary" style="font-size: 2rem;"></i>
-                    <h5 class="mt-3">Ubicación</h5>
-                    <p>C/ Fisioterapia, 123 - Madrid</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="modal fade" id="authModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">PhysioSafe</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="loginForm" class="auth-form" style="display: none;">
-                        <h5 class="mb-4">Iniciar Sesión</h5>
-                        <div class="form-floating mb-3">
-                            <input type="email" id="loginEmail" class="form-control" placeholder="tu@email.com" required>
-                            <label for="loginEmail"><i class="fas fa-envelope me-2"></i>Email</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
-                            <label for="loginPassword"><i class="fas fa-lock me-2"></i>Contraseña</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
-                        <p class="text-center">
-                            ¿No tienes cuenta? <a href="#" class="text-primary fw-bold" onclick="switchForm('register')">Regístrate aquí</a>
-                        </p>
-                    </form>
-
-                    <form id="registerForm" class="auth-form">
-                        <h5 class="mb-4">Crear Cuenta</h5>
-                        <div class="form-floating mb-3">
-                            <input type="text" id="registerName" class="form-control" placeholder="Tu nombre" required>
-                            <label for="registerName"><i class="fas fa-user me-2"></i>Nombre Completo</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="email" id="registerEmail" class="form-control" placeholder="tu@email.com" required>
-                            <label for="registerEmail"><i class="fas fa-envelope me-2"></i>Email</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="password" id="registerPassword" class="form-control" placeholder="••••••••" required>
-                            <label for="registerPassword"><i class="fas fa-lock me-2"></i>Contraseña</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <select id="registerRole" class="form-select" required>
-                                <option value="" selected disabled>Selecciona un rol</option>
-                                <option value="paciente">Paciente</option>
-                                <option value="fisio">Fisioterapeuta</option>
-                            </select>
-                            <label for="registerRole"><i class="fas fa-user-tag me-2"></i>Tipo de Usuario</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Registrarse</button>
-                        <p class="text-center">
-                            ¿Ya tienes cuenta? <a href="#" class="text-primary fw-bold" onclick="switchForm('login')">Inicia sesión</a>
-                        </p>
-                    </form>
+                        <form id="registerForm" class="d-none">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-muted">Nombre Completo</label>
+                                <input type="text" class="form-control form-control-lg bg-light" id="regName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-muted">Correo Electrónico</label>
+                                <input type="email" class="form-control form-control-lg bg-light" id="regEmail" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold text-muted">Contraseña</label>
+                                <input type="password" class="form-control form-control-lg bg-light" id="regPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill" style="background: linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%); border: none;">Crear Cuenta</button>
+                            <p class="text-center mt-3 mb-0 text-muted"><small>¿Ya tienes cuenta? <a href="#" onclick="showLoginForm()" class="text-primary text-decoration-none fw-bold">Inicia Sesión</a></small></p>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="bg-dark text-white py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-clinic-medical"></i> PhysioSafe</h5>
-                    <p>Tu salud, nuestra prioridad</p>
+    <div id="root"></div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+    <script type="text/babel">
+        const { motion, useScroll, useTransform } = window.Motion;
+        const { useRef, useState, useEffect } = React;
+
+        const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className, as: Component = 'div', ...props }) => {
+            const MotionComponent = motion[Component] || motion.div;
+            return (
+                <MotionComponent
+                initial={{ opacity: 0, x, y }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "50px", amount: 0 }}
+                transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
+                className={className}
+                {...props}
+                >
+                {children}
+                </MotionComponent>
+            );
+        };
+
+        const Magnet = ({ children, padding = 150, strength = 3, activeTransition = "transform 0.3s ease-out", inactiveTransition = "transform 0.6s ease-in-out", className = "" }) => {
+            const ref = useRef(null);
+            const [position, setPosition] = useState({ x: 0, y: 0 });
+            const [isActive, setIsActive] = useState(false);
+
+            const handleMouseMove = (e) => {
+                if (!ref.current) return;
+                const { left, top, width, height } = ref.current.getBoundingClientRect();
+                const centerX = left + width / 2;
+                const centerY = top + height / 2;
+                const distanceX = e.clientX - centerX;
+                const distanceY = e.clientY - centerY;
+                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                if (distance < (width / 2) + padding) {
+                    setIsActive(true);
+                    setPosition({ x: distanceX / strength, y: distanceY / strength });
+                } else {
+                    setIsActive(false);
+                    setPosition({ x: 0, y: 0 });
+                }
+            };
+
+            const handleMouseLeave = () => {
+                setIsActive(false);
+                setPosition({ x: 0, y: 0 });
+            };
+
+            useEffect(() => {
+                window.addEventListener('mousemove', handleMouseMove);
+                return () => window.removeEventListener('mousemove', handleMouseMove);
+            }, []);
+
+            return (
+                <div
+                ref={ref}
+                onMouseLeave={handleMouseLeave}
+                className={className}
+                style={{
+                    transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+                    transition: isActive ? activeTransition : inactiveTransition,
+                    willChange: 'transform'
+                }}
+                >
+                {children}
                 </div>
-                <div class="col-md-4">
-                    <h5>Enlaces Rápidos</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#servicios" class="text-white-50">Servicios</a></li>
-                        <li><a href="#about" class="text-white-50">Nosotros</a></li>
-                        <li><a href="#contact" class="text-white-50">Contacto</a></li>
-                    </ul>
+            );
+        };
+
+        const ContactButton = ({ onClick, text = "Access Dashboard" }) => {
+            return (
+                <button
+                onClick={onClick}
+                className="rounded-full px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base text-white font-medium uppercase tracking-widest relative z-50"
+                style={{
+                    background: 'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)',
+                    boxShadow: '0px 4px 4px rgba(181, 1, 167, 0.25), 4px 4px 12px #7721B1 inset',
+                    outline: '2px solid white',
+                    outlineOffset: '-3px'
+                }}
+                >
+                {text}
+                </button>
+            );
+        };
+
+        const AnimatedText = ({ text, className = "" }) => {
+            const containerRef = useRef(null);
+            const { scrollYProgress } = useScroll({
+                target: containerRef,
+                offset: ["start 0.8", "end 0.2"]
+            });
+
+            const words = text.split("");
+
+            return (
+                <p ref={containerRef} className={className}>
+                {words.map((char, i) => {
+                    const start = i / words.length;
+                    const end = start + (1 / words.length);
+                    const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+                    return (
+                        <span key={i} className="relative inline-block">
+                            <span className="opacity-0">{char === " " ? "\u00A0" : char}</span>
+                            <motion.span style={{ opacity }} className="absolute left-0 top-0">
+                                {char === " " ? "\u00A0" : char}
+                            </motion.span>
+                        </span>
+                    )
+                })}
+                </p>
+            );
+        };
+
+        const HeroSection = () => {
+            const openLogin = (e) => {
+                e.preventDefault();
+                showLoginForm();
+                new bootstrap.Modal(document.getElementById('authModal')).show();
+            };
+
+            const openRegister = (e) => {
+                e.preventDefault();
+                showRegisterForm();
+                new bootstrap.Modal(document.getElementById('authModal')).show();
+            };
+
+            return (
+                <section id="inicio" className="h-screen flex flex-col overflow-x-clip relative">
+                <FadeIn delay={0} y={-20} as="nav" className="flex justify-between px-6 md:px-10 pt-6 md:pt-8 w-full z-20">
+                    {['Services', 'About', 'Login', 'Register'].map((link) => (
+                    <a
+                        key={link}
+                        href={link === 'Login' || link === 'Register' ? '#' : `#${link.toLowerCase()}`}
+                        onClick={link === 'Login' ? openLogin : link === 'Register' ? openRegister : undefined}
+                        className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200"
+                    >
+                        {link}
+                    </a>
+                    ))}
+                </FadeIn>
+
+                <div className="flex-1 flex flex-col justify-between relative z-10 w-full mt-6 sm:mt-4 md:-mt-5">
+                    <div className="overflow-hidden w-full">
+                    <FadeIn delay={0.15} y={40} className="w-full">
+                        <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] text-center">
+                        PhysioSafe
+                        </h1>
+                    </FadeIn>
+                    </div>
+
+                    <div className="flex justify-between items-end pb-7 sm:pb-8 md:pb-10 px-6 md:px-10 w-full z-20 relative">
+                    <FadeIn delay={0.35} y={20}>
+                        <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug text-[clamp(0.75rem,1.4vw,1.5rem)] max-w-[160px] sm:max-w-[220px] md:max-w-[260px]">
+                        Tu clínica digital 3D. Recupera tu movilidad con expertos y tecnología.
+                        </p>
+                    </FadeIn>
+                    <FadeIn delay={0.5} y={20}>
+                        <ContactButton onClick={openLogin} />
+                    </FadeIn>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <h5>Redes Sociales</h5>
-                    <a href="#" class="text-white-50 me-2"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-white-50 me-2"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-white-50"><i class="fab fa-instagram"></i></a>
+
+                <FadeIn delay={0.6} y={30} className="absolute left-1/2 -translate-x-1/2 z-10 w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0">
+                    <Magnet>
+                    <img
+                        src="https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png"
+                        alt="Jack Portrait"
+                        className="w-full h-auto object-cover pointer-events-none"
+                    />
+                    </Magnet>
+                </FadeIn>
+                </section>
+            );
+        };
+
+        const MarqueeSection = () => {
+            const sectionRef = useRef(null);
+            const [offset, setOffset] = useState(0);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                if (!sectionRef.current) return;
+                const sectionTop = sectionRef.current.offsetTop;
+                const calcOffset = (window.scrollY - sectionTop + window.innerHeight) * 0.3;
+                setOffset(calcOffset);
+                };
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const gifs = [
+                "https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif",
+                "https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif",
+                "https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif",
+                "https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif",
+                "https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif",
+                "https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif",
+                "https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif",
+                "https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif",
+                "https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif",
+                "https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif",
+                "https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif",
+                "https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif",
+                "https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif",
+                "https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif",
+                "https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif",
+                "https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif",
+                "https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif",
+                "https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif",
+                "https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif",
+                "https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif",
+                "https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif"
+            ];
+            const row1 = [...gifs.slice(0, 11), ...gifs.slice(0, 11), ...gifs.slice(0, 11)];
+            const row2 = [...gifs.slice(11), ...gifs.slice(11), ...gifs.slice(11)];
+
+            return (
+                <section ref={sectionRef} className="bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden flex flex-col gap-3">
+                <div
+                    className="flex gap-3"
+                    style={{ transform: `translateX(${offset - 200}px)`, willChange: 'transform' }}
+                >
+                    {row1.map((src, i) => (
+                    <img key={i} src={src} alt="Work preview" loading="lazy" className="w-[420px] h-[270px] rounded-2xl object-cover shrink-0" />
+                    ))}
                 </div>
-            </div>
-            <hr class="bg-white-50">
-            <p class="text-center text-white-50 mb-0">&copy; 2026 PhysioSafe. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+                <div
+                    className="flex gap-3"
+                    style={{ transform: `translateX(${-(offset - 200)}px)`, willChange: 'transform' }}
+                >
+                    {row2.map((src, i) => (
+                    <img key={i} src={src} alt="Work preview" loading="lazy" className="w-[420px] h-[270px] rounded-2xl object-cover shrink-0" />
+                    ))}
+                </div>
+                </section>
+            );
+        };
+
+        const AboutSection = () => {
+            return (
+                <section id="about" className="min-h-screen relative flex flex-col items-center justify-center px-5 sm:px-8 md:px-10 py-20 overflow-hidden bg-[#0C0C0C]">
+                <FadeIn delay={0.1} x={-80} y={0} duration={0.9} className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-0">
+                    <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png" className="w-[120px] sm:w-[160px] md:w-[210px] object-contain" alt="Moon icon" />
+                </FadeIn>
+                <FadeIn delay={0.25} x={-80} y={0} duration={0.9} className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-0">
+                    <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png" className="w-[100px] sm:w-[140px] md:w-[180px] object-contain" alt="3D object" />
+                </FadeIn>
+                <FadeIn delay={0.15} x={80} y={0} duration={0.9} className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-0">
+                    <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png" className="w-[120px] sm:w-[160px] md:w-[210px] object-contain" alt="Lego icon" />
+                </FadeIn>
+                <FadeIn delay={0.3} x={80} y={0} duration={0.9} className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-0">
+                    <img src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png" className="w-[130px] sm:w-[170px] md:w-[220px] object-contain" alt="3D group" />
+                </FadeIn>
+
+                <div className="relative z-10 flex flex-col items-center gap-10 sm:gap-14 md:gap-16">
+                    <FadeIn delay={0} y={40}>
+                    <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[clamp(3rem,12vw,160px)]">
+                        About us
+                    </h2>
+                    </FadeIn>
+
+                    <div className="flex flex-col items-center gap-16 sm:gap-20 md:gap-24">
+                    <AnimatedText
+                        text="Con más de 5 años de experiencia, somos una clínica que fusiona la fisioterapia clásica con la última tecnología y renderizado 3D para diagnosticar y recuperar. Nos gusta que los negocios y los pacientes destaquen. ¡Construyamos algo increíble juntos!"
+                        className="text-[#D7E2EA] font-medium text-center leading-relaxed max-w-[560px] text-[clamp(1rem,2vw,1.35rem)]"
+                    />
+                    <ContactButton text="Acceder a Citas" onClick={(e) => {
+                        e.preventDefault();
+                        showLoginForm();
+                        new bootstrap.Modal(document.getElementById('authModal')).show();
+                    }} />
+                    </div>
+                </div>
+                </section>
+            );
+        };
+
+        const ServicesSection = () => {
+            const services = [
+                { num: "01", title: "Fisioterapia General", desc: "Creation of detailed plans for characters and patients tailored to specific client needs, ideal for games, products, and visualizations." },
+                { num: "02", title: "Osteopatía", desc: "High-quality, photorealistic renders that showcase designs with custom lighting, textures, and materials to bring concepts to life." },
+                { num: "03", title: "Rehabilitación Deportiva", desc: "Dynamic animations and motion graphics that add energy and storytelling to brands, products, and digital experiences." },
+                { num: "04", title: "Punción Seca", desc: "Crafting cohesive visual identities -- from logos to full brand systems -- that communicate a clear and memorable presence." },
+                { num: "05", title: "Readaptación", desc: "Designing clean, modern, and conversion-focused websites with attention to layout, typography, and user experience." }
+            ];
+            return (
+                <section id="services" className="bg-[#FFFFFF] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-20">
+                <h2 className="text-[#0C0C0C] font-black uppercase text-center text-[clamp(3rem,12vw,160px)] mb-16 sm:mb-20 md:mb-28">
+                    Services
+                </h2>
+
+                <div className="max-w-5xl mx-auto flex flex-col">
+                    {services.map((s, i) => (
+                    <FadeIn
+                        key={i}
+                        delay={i * 0.1}
+                        className="flex flex-col sm:flex-row items-start sm:items-center py-8 sm:py-10 md:py-12 border-b border-[#0C0C0C]/15 last:border-b-0 gap-6 sm:gap-12 md:gap-16"
+                    >
+                        <div className="font-black text-[#0C0C0C] text-[clamp(3rem,10vw,140px)] leading-none shrink-0">
+                        {s.num}
+                        </div>
+                        <div className="flex flex-col gap-3">
+                        <h3 className="font-medium uppercase text-[#0C0C0C] text-[clamp(1rem,2.2vw,2.1rem)]">
+                            {s.title}
+                        </h3>
+                        <p className="font-light leading-relaxed max-w-2xl text-[clamp(0.85rem,1.6vw,1.25rem)] text-[#0C0C0C] opacity-60">
+                            {s.desc}
+                        </p>
+                        </div>
+                    </FadeIn>
+                    ))}
+                </div>
+                </section>
+            );
+        };
+
+
+
+        const LiveProjectButton = () => {
+            return (
+                <button className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base hover:bg-[#D7E2EA]/10 transition-colors">
+                Live Project
+                </button>
+            );
+        };
+
+        const ProjectsSection = () => {
+            const projects = [
+                {
+                    num: "01", client: "Client", name: "Nextlevel Studio",
+                    images: [
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85",
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85",
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85"
+                    ]
+                },
+                {
+                    num: "02", client: "Personal", name: "Aura Brand Identity",
+                    images: [
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85",
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1.png&w=1280&q=85",
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea.png&w=1280&q=85"
+                    ]
+                },
+                {
+                    num: "03", client: "Client", name: "Solaris Digital",
+                    images: [
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85",
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b.png&w=1280&q=85",
+                    "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee.png&w=1280&q=85"
+                    ]
+                }
+            ];
+
+            const ProjectCard = ({ project, index, total }) => {
+                const cardRef = useRef(null);
+                const { scrollYProgress } = useScroll({
+                    target: cardRef,
+                    offset: ["start end", "start start"]
+                });
+
+                const targetScale = 1 - (total - 1 - index) * 0.03;
+                const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+
+                return (
+                    <div
+                    ref={cardRef}
+                    className="sticky h-[85vh] flex items-center justify-center top-24 md:top-32"
+                    style={{ top: `calc(6rem + ${index * 28}px)` }}
+                    >
+                    <motion.div
+                        style={{ scale }}
+                        className="w-full max-w-6xl rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 sm:p-6 md:p-8 flex flex-col gap-6 sm:gap-8"
+                    >
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+                        <div className="flex items-center gap-6 sm:gap-8">
+                            <span className="font-black text-[#D7E2EA] text-[clamp(3rem,8vw,100px)] leading-none">{project.num}</span>
+                            <div className="flex flex-col">
+                            <span className="text-[#D7E2EA] opacity-60 text-sm uppercase tracking-widest mb-1">{project.client}</span>
+                            <h3 className="font-medium text-[#D7E2EA] text-2xl sm:text-3xl md:text-4xl">{project.name}</h3>
+                            </div>
+                        </div>
+                        <LiveProjectButton />
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 h-full min-h-[300px]">
+                        <div className="flex flex-col gap-4 sm:gap-6 md:gap-8 w-full sm:w-[40%]">
+                            <img src={project.images[0]} className="w-full h-[clamp(130px,16vw,230px)] object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]" alt="Project shot 1" />
+                            <img src={project.images[1]} className="w-full h-[clamp(160px,22vw,340px)] object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]" alt="Project shot 2" />
+                        </div>
+                        <div className="w-full sm:w-[60%] h-full">
+                            <img src={project.images[2]} className="w-full h-full min-h-[300px] object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]" alt="Project main shot" />
+                        </div>
+                        </div>
+                    </motion.div>
+                    </div>
+                );
+            };
+
+            return (
+                <section id="projects" className="bg-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 relative z-30 pt-20 pb-32 px-5 sm:px-8 md:px-10">
+                <h2 className="hero-heading font-black uppercase text-center text-[clamp(3rem,12vw,160px)] mb-16 sm:mb-20">
+                    Project
+                </h2>
+
+                <div className="flex flex-col relative w-full pb-[10vh]">
+                    {projects.map((p, i) => (
+                    <ProjectCard key={i} project={p} index={i} total={projects.length} />
+                    ))}
+                </div>
+                </section>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="overflow-x-clip text-white min-h-screen bg-[#0C0C0C] main-wrapper">
+                    <HeroSection />
+                    <MarqueeSection />
+                    <AboutSection />
+                    <ServicesSection />
+                    <ProjectsSection />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>

@@ -1,63 +1,114 @@
-version: '3.8'
 services:
   db:
     image: postgres:15
     container_name: physiosafe_db
+    restart: unless-stopped
+    env_file: .env
     environment:
-      POSTGRES_USER: physiouser
-      POSTGRES_PASSWORD: SecretPassword123!
-      POSTGRES_DB: physiodb
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME} -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - physio-network
 
   web-app:
-    image: node:18-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: physiosafe_web
-    working_dir: /app
-    # 1. Cambiamos npm start por node server.js por si no tienes el script configurado
-    command: sh -c "npm install && node server.js"
-    volumes:
-      # 2. EL CAMBIO CRÍTICO: El punto y barra (./) coge la raíz de tu proyecto
-      - ./:/app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      FRONTEND_URL: ${FRONTEND_URL}
+      CORS_ORIGIN: ${FRONTEND_URL}
     ports:
       - "3000:3000"
     depends_on:
-      - db
-    networks:
-      - physio-network
-
-  typebot-builder:
-    image: baptistearno/typebot-builder:latest
-    container_name: physiosafe_bot_builder
-    environment:
-      - DATABASE_URL=postgresql://physiouser:SecretPassword123!@db:5432/physiodb
-      - ENCRYPTION_SECRET=ClaveSuperSecretaPhysioSafe2026!
-      - NEXTAUTH_URL=http://localhost:8081
-      - NEXT_PUBLIC_VIEWER_URL=http://localhost:8082
-    ports:
-      - "8081:3000"
-    depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - physio-network
 
   typebot-viewer:
     image: baptistearno/typebot-viewer:latest
     container_name: physiosafe_bot_viewer
+    restart: unless-stopped
+    env_file: .env
     environment:
-      - DATABASE_URL=postgresql://physiouser:SecretPassword123!@db:5432/physiodb
-      - ENCRYPTION_SECRET=ClaveSuperSecretaPhysioSafe2026!
-      - CORS_ORIGIN=*
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      CORS_ORIGIN: "*"
     ports:
       - "8082:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - physio-network
+
+  typebot-builder:
+    image: baptistearno/typebot-builder:latest
+    container_name: physiosafe_bot_builder
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      NEXTAUTH_URL: http://localhost:8081
+      NEXT_PUBLIC_VIEWER_URL: http://localhost:8082
+    ports:
+      - "8081:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      typebot-viewer:
+        condition: service_started
+    networks:
+      - physio-network
+
+  # --------------------------------------------------------
+  # INFRAESTRUCTURA DE SEGURIDAD (PROXY Y TÚNEL)
+  # --------------------------------------------------------
+
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: physiosafe_npm
+    restart: unless-stopped
+    ports:
+      - "80:80"     # Tráfico HTTP
+      - "443:443"   # Tráfico HTTPS (SSL)
+      - "81:81"     # Panel de Administración visual
+    volumes:
+      - ./nginx/data:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt
+    networks:
+      - physio-network
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: physiosafe_tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    networks:
+      - physio-network
+
+volumes:
+  postgres_data:
 
 networks:
   physio-network:

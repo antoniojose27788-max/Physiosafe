@@ -24,8 +24,8 @@
             
             <small class="text-muted text-uppercase fw-bold mt-4 mb-3 d-block px-3" style="font-size: 0.75rem;">Gestión Clínica</small>
             <a href="#" class="nav-item disabled"><i class="bi bi-people"></i> Mis Pacientes <span class="badge bg-light text-dark ms-auto">Pro</span></a>
-            <a href="#" class="nav-item disabled"><i class="bi bi-file-earmark-medical"></i> Historiales <span class="badge bg-light text-dark ms-auto">Pro</span></a>
-            <a href="#" class="nav-item disabled"><i class="bi bi-credit-card"></i> Facturación <span class="badge bg-light text-dark ms-auto">Pro</span></a>
+            <a href="#" class="nav-item" data-target="records"><i class="bi bi-file-earmark-medical"></i> Expedientes Clínicos</a>
+            <a href="#" class="nav-item" data-target="billing"><i class="bi bi-credit-card"></i> Facturación</a>
         </nav>
         <div class="sidebar-footer">
             <button class="btn btn-outline-danger w-100 fw-semibold" id="logoutBtn">
@@ -146,6 +146,63 @@
                 </div>
             </section>
 
+            <!-- Expedientes Clínicos Section -->
+            <section id="records-section" class="spa-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold m-0 text-navy">Expedientes Clínicos</h4>
+                    <button class="btn btn-primary" id="btnNuevoExpediente" style="display:none;"><i class="bi bi-plus-lg"></i> Nuevo Expediente</button>
+                </div>
+                <div class="card premium-card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0" id="tablaExpedientes">
+                                <thead class="table-light text-uppercase text-muted" style="font-size: 0.8rem;">
+                                    <tr>
+                                        <th>Paciente</th>
+                                        <th>Fisioterapeuta</th>
+                                        <th>Diagnóstico</th>
+                                        <th>Tratamiento</th>
+                                        <th>Evolución</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Contenido dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Facturación Section -->
+            <section id="billing-section" class="spa-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold m-0 text-navy">Facturación y Pagos</h4>
+                    <button class="btn btn-primary" id="btnNuevaFactura" style="display:none;"><i class="bi bi-plus-lg"></i> Nueva Factura</button>
+                </div>
+                <div class="card premium-card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0" id="tablaFacturas">
+                                <thead class="table-light text-uppercase text-muted" style="font-size: 0.8rem;">
+                                    <tr>
+                                        <th>Paciente</th>
+                                        <th>Monto</th>
+                                        <th>Estado</th>
+                                        <th>Fecha Emisión</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Contenido dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
     </main>
 </div>
@@ -190,5 +247,71 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="dashboard.js"></script>
+
+<!-- Modal Nueva Factura -->
+<div class="modal fade" id="nuevaFacturaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold text-navy">Nueva Factura</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNuevaFactura">
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Paciente</label>
+                        <select class="form-select" id="facturaPacienteId" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Monto (€)</label>
+                        <input type="number" step="0.01" class="form-control" id="facturaMonto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Estado</label>
+                        <select class="form-select" id="facturaEstado">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="pagado">Pagado</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Generar Factura</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nuevo Expediente -->
+<div class="modal fade" id="nuevoExpedienteModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold text-navy">Nuevo Expediente Clínico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formNuevoExpediente">
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Paciente</label>
+                        <select class="form-select" id="expedientePacienteId" required></select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Diagnóstico</label>
+                        <textarea class="form-control" id="expedienteDiagnostico" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Tratamiento</label>
+                        <textarea class="form-control" id="expedienteTratamiento" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted fw-semibold" style="font-size: 0.85rem;">Evolución</label>
+                        <textarea class="form-control" id="expedienteEvolucion" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">Guardar Expediente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

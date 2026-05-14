@@ -17,12 +17,10 @@ exports.getAppointments = async (req, res) => {
         const userId = req.user.id;
         const { estado, mes } = req.query;
 
-        let where = {
-            [Op.or]: [
-                { paciente_id: userId },
-                { fisio_id: userId }
-            ]
-        };
+        let where = {};
+        if (req.user.rol === 'paciente') {
+            where.paciente_id = userId;
+        } // Si es admin o fisio, no filtramos para que vea todas (según requisito)
 
         // Filtrar por estado si se proporciona
         if (estado) {
@@ -410,12 +408,10 @@ exports.getStats = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        let appointmentWhere = {
-            [Op.or]: [
-                { paciente_id: userId },
-                { fisio_id: userId }
-            ]
-        };
+        let appointmentWhere = {};
+        if (req.user.rol === 'paciente') {
+            appointmentWhere.paciente_id = userId;
+        }
 
         const stats = {
             totalAppointments: await Appointment.count({ where: appointmentWhere }),
@@ -428,8 +424,13 @@ exports.getStats = async (req, res) => {
         };
 
         if (req.user.rol !== 'paciente') {
-            stats.totalReports = await Report.count({ where: { fisio_id: userId } });
+            stats.totalReports = await Report.count({ where: req.user.rol === 'admin' ? {} : { fisio_id: userId } });
             stats.totalPatients = await User.count({ where: { rol: 'paciente' } });
+
+            // Calculamos ingresos
+            const { Bill } = require('../models');
+            const totalIngresosRes = await Bill.sum('monto', { where: { estado: 'pagado' }});
+            stats.totalIngresos = totalIngresosRes || 0;
         }
 
         res.json(stats);

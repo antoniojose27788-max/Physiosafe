@@ -38,4 +38,20 @@ router.get('/stats', apiController.getStats);
 router.get('/users', apiController.getUsers);
 router.get('/users/:id', apiController.getUser);
 
+
+// ============================================================
+// RUTAS DE FACTURAS (BILLS)
+// ============================================================
+const billController = require('../controllers/billController');
+router.get('/bills', billController.getBills);
+router.post('/bills', billController.createBill);
+router.put('/bills/:id', billController.updateBillStatus);
+
+// ============================================================
+// RUTAS DE EXPEDIENTES (RECORDS)
+// ============================================================
+const recordController = require('../controllers/recordController');
+router.get('/records', recordController.getRecords);
+router.post('/records', recordController.createRecord);
+
 module.exports = router;
