@@ -417,4 +417,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     initChart();
     initCalendar();
     await loadAppointments();
+    if (userRole !== "paciente") {
+        const btnExpediente = document.getElementById("btnNuevoExpediente");
+        const btnFactura = document.getElementById("btnNuevaFactura");
+        if(btnExpediente) btnExpediente.style.display = "block";
+        if(btnFactura) btnFactura.style.display = "block";
+        if(typeof loadPatientsForSelects === 'function') await loadPatientsForSelects();
+    }
+    if(typeof loadRecords === 'function') await loadRecords();
+    if(typeof loadBills === 'function') await loadBills();
 });
