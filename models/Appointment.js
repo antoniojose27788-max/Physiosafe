@@ -44,6 +44,14 @@ const Appointment = sequelize.define('Appointment', {
       model: 'users', // Nombre de la tabla referenciada
       key: 'id' // Campo referenciado
     }
+  },
+  motivo: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  observaciones: {
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   // Opciones del modelo

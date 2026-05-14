@@ -23,9 +23,9 @@
             <a href="#" class="nav-item" data-target="calendar"><i class="bi bi-calendar-event"></i> Calendario</a>
             
             <small class="text-muted text-uppercase fw-bold mt-4 mb-3 d-block px-3" style="font-size: 0.75rem;">Gestión Clínica</small>
-            <a href="#" class="nav-item disabled"><i class="bi bi-people"></i> Mis Pacientes <span class="badge bg-light text-dark ms-auto">Pro</span></a>
-            <a href="#" class="nav-item disabled"><i class="bi bi-file-earmark-medical"></i> Historiales <span class="badge bg-light text-dark ms-auto">Pro</span></a>
-            <a href="#" class="nav-item disabled"><i class="bi bi-credit-card"></i> Facturación <span class="badge bg-light text-dark ms-auto">Pro</span></a>
+            <a href="#" class="nav-item" data-target="patients"><i class="bi bi-people"></i> Pacientes</a>
+            <a href="#" class="nav-item" data-target="records"><i class="bi bi-file-earmark-medical"></i> Expedientes</a>
+            <a href="#" class="nav-item" data-target="billing"><i class="bi bi-credit-card"></i> Facturación</a>
         </nav>
         <div class="sidebar-footer">
             <button class="btn btn-outline-danger w-100 fw-semibold" id="logoutBtn">
@@ -62,31 +62,19 @@
                 <h2 class="section-title">Resumen Clínico</h2>
                 
                 <div class="row g-4 mb-4">
-                    <div class="col-md-4">
+                    <div class="col-md-6 col-xl-3">
                         <div class="kpi-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <p class="text-muted fw-semibold mb-0">Total Citas Activas</p>
+                                    <p class="text-muted fw-semibold mb-0">Total Citas</p>
                                     <div class="kpi-value" id="kpiCitas">0</div>
                                 </div>
                                 <div class="kpi-icon blue"><i class="bi bi-calendar-check"></i></div>
                             </div>
-                            <small class="text-success fw-bold mt-3"><i class="bi bi-arrow-up-right"></i> +12% este mes</small>
+                            <small class="text-muted mt-3 d-block">Activas en el período filtrado</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="kpi-card">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p class="text-muted fw-semibold mb-0">Tasa de Asistencia</p>
-                                    <div class="kpi-value">94%</div>
-                                </div>
-                                <div class="kpi-icon green"><i class="bi bi-activity"></i></div>
-                            </div>
-                            <small class="text-success fw-bold mt-3">Estado Óptimo</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6 col-xl-3">
                         <div class="kpi-card">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
@@ -95,7 +83,31 @@
                                 </div>
                                 <div class="kpi-icon orange"><i class="bi bi-clock-history"></i></div>
                             </div>
-                            <small class="text-muted mt-3">Requieren atención</small>
+                            <small class="text-muted mt-3 d-block">Por confirmar o realizar</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted fw-semibold mb-0">Ingresos cobrados</p>
+                                    <div class="kpi-value text-success" id="kpiIngresos">0 €</div>
+                                </div>
+                                <div class="kpi-icon green"><i class="bi bi-cash-stack"></i></div>
+                            </div>
+                            <small class="text-muted mt-3 d-block">Facturas en estado pagada</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-muted fw-semibold mb-0">Pendiente de cobro</p>
+                                    <div class="kpi-value" id="kpiPendienteCobro">0 €</div>
+                                </div>
+                                <div class="kpi-icon blue"><i class="bi bi-receipt"></i></div>
+                            </div>
+                            <small class="text-muted mt-3 d-block">Facturas emitidas sin cobrar</small>
                         </div>
                     </div>
                 </div>
@@ -121,6 +133,7 @@
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light text-muted" style="font-size: 0.85rem;">
                                         <tr>
+                                            <th id="thPaciente" class="d-none">PACIENTE</th>
                                             <th>TRATAMIENTO / MOTIVO</th>
                                             <th>FECHA Y HORA</th>
                                             <th>ESTADO</th>
@@ -146,6 +159,77 @@
                 </div>
             </section>
 
+            <section id="patients-section" class="spa-section">
+                <h2 class="section-title">Pacientes</h2>
+                <div class="saas-card">
+                    <div class="saas-card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">Directorio</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light text-muted small">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Alta</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablePatients"></tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted small p-3 mb-0 d-none" id="patientsPacienteMsg">Solo el personal de la clínica puede ver el listado de pacientes.</p>
+                </div>
+            </section>
+
+            <section id="records-section" class="spa-section">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <h2 class="section-title mb-0">Expediente clínico</h2>
+                    <button type="button" class="btn btn-primary d-none" id="btnNuevoExpediente" data-bs-toggle="modal" data-bs-target="#modalRecord">
+                        <i class="bi bi-plus-lg"></i> Nueva entrada
+                    </button>
+                </div>
+                <div class="saas-card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light text-muted small">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Paciente</th>
+                                    <th>Profesional</th>
+                                    <th>Resumen</th>
+                                    <th class="text-end">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableRecords"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="billing-section" class="spa-section">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <h2 class="section-title mb-0">Facturación</h2>
+                    <button type="button" class="btn btn-primary d-none" id="btnNuevaFactura" data-bs-toggle="modal" data-bs-target="#modalBill">
+                        <i class="bi bi-plus-lg"></i> Nueva factura
+                    </button>
+                </div>
+                <div class="saas-card">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light text-muted small">
+                                <tr>
+                                    <th>Nº</th>
+                                    <th>Paciente</th>
+                                    <th>Importe</th>
+                                    <th>Estado</th>
+                                    <th class="text-end">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBills"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
     </main>
 </div>
@@ -158,6 +242,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
+                <div class="mb-3 d-none" id="wrapCitaPaciente">
+                    <label class="form-label fw-semibold text-muted">Paciente</label>
+                    <select class="form-select form-select-lg bg-light" id="citaPacienteId"></select>
+                </div>
+                <div class="mb-3 d-none" id="wrapCitaFisio">
+                    <label class="form-label fw-semibold text-muted">Fisioterapeuta</label>
+                    <select class="form-select form-select-lg bg-light" id="citaFisioId"></select>
+                </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-muted">Motivo / Tratamiento</label>
                     <input type="text" class="form-control form-control-lg bg-light" id="citaMotivo" placeholder="Ej: Rehabilitación de rodilla" required>
@@ -174,6 +266,68 @@
             <div class="modal-footer border-top p-4 bg-light rounded-bottom">
                 <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">Confirmar Cita</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modalBill" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content border-0 shadow-lg" id="formBill">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="modal-title fw-bold">Nueva factura</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Paciente</label>
+                    <select class="form-select form-select-lg bg-light" id="billPacienteId" required></select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Importe (€)</label>
+                    <input type="number" step="0.01" min="0" class="form-control form-control-lg bg-light" id="billMonto" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Concepto</label>
+                    <textarea class="form-control bg-light" id="billConcepto" rows="3" placeholder="Sesiones, bono, material..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-top p-4 bg-light rounded-bottom">
+                <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">Emitir factura</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="modalRecord" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <form class="modal-content border-0 shadow-lg" id="formRecord">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="modal-title fw-bold">Entrada de expediente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Paciente</label>
+                    <select class="form-select form-select-lg bg-light" id="recordPacienteId" required></select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Diagnóstico</label>
+                    <textarea class="form-control bg-light" id="recordDiagnostico" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Tratamientos</label>
+                    <textarea class="form-control bg-light" id="recordTratamientos" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-muted">Evolución</label>
+                    <textarea class="form-control bg-light" id="recordEvolucion" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-top p-4 bg-light rounded-bottom">
+                <button type="button" class="btn btn-link text-muted text-decoration-none" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">Guardar</button>
             </div>
         </form>
     </div>
